@@ -46,6 +46,9 @@ data2["Messages"] = [str(x).replace('-', ' ') for x in data2["Messages"]]
 
 data2 = data2[["Messages", "label"]]
 data2.rename(columns={'label': 'Spam/Ham'}, inplace=True)
+data_np = data2.to_numpy()
+import numpy as np
+np.save("data_npy", data_np, allow_pickle=True)
 data2.to_csv("processed_data_processed.csv", index=False, header=False)
 
 # mix two datasets
