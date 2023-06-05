@@ -5,6 +5,9 @@ from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 import numpy as np
 
+rng = np.random.default_rng(84562526555)
+rng2 = np.random.default_rng(965489652562)
+
 le = LabelEncoder()
 data = pd.read_csv("enron_spam_data.csv")
 data = data.fillna('')
@@ -23,14 +26,31 @@ data["Messages"] = [str(x).replace('-', ' ') for x in data["Messages"]]
 data["Spam/Ham"] = le.fit_transform(data["Spam/Ham"])
 data = data[["Messages", "Spam/Ham"]]
 data_np = data.to_numpy()
+
+rng.shuffle(data_np)
+rng2.shuffle(data_np)
+
+# size = data_np.shape[0]/20
+# size = int(size)
+# counter1 = 0
+# counter0 = 0
+# i = 0
+# for x in range(0, size):
+#     data_chunk = data_np[0 + 20 * i:20*(i+1)]
+#     counter1 = 0
+#     counter0 = 0
+#     for d in data_chunk:
+#         if d[1] == 0:
+#             counter0 = counter0 + 1
+#         if d[1] == 1:
+#             counter1 = counter1 + 1
+#     print("----------------------------------------")
+#     print(counter0)
+#     print(counter1)
+#     i = i + 1
+
 np.save("enron_processed_npy", data_np, allow_pickle=True)
 
-#
-#              _._     _,-'""`-._
-#             (,-.`._,'(       |\`-/|
-#                  `-.-' \ )-`( , o o)
-#                       `-    \`_`"'-
-#
 
 data2 = pd.read_csv("processed_data.csv")
 data2 = data2.fillna('')
@@ -49,6 +69,8 @@ data2["Messages"] = [str(x).replace('-', ' ') for x in data2["Messages"]]
 data2 = data2[["Messages", "label"]]
 data2.rename(columns={'label': 'Spam/Ham'}, inplace=True)
 data2_np = data2.to_numpy()
+rng.shuffle(data2_np)
+rng2.shuffle(data2_np)
 np.save("processed_data_processed_npy", data2_np, allow_pickle=True)
 
 # mix two datasets
@@ -76,7 +98,5 @@ if modulo2 != 0:
 file_name = "n=" + str(n_drifts) + "_npy"
 df_npy = df.to_numpy()
 np.save(file_name, df_npy, allow_pickle=True)
-
-
 
 print(len(df))
